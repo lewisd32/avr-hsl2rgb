@@ -76,7 +76,7 @@ void hsl2rgb(uint16_t hue, uint8_t sat, uint8_t lum, uint8_t rgb[3]) {
 		 * rgb[i] = ((((rgb[i] * inverse_sat) / 255) + sat) * lum) / 255;
 		 * Changed to:
 		 * rgb[i] = ((((rgb[i] * (inverse_sat+1)) / 256) + sat) * (lum+1)) / 256;
-		 * Produces slightly different output, but it much faster.
+		 * Produces slightly different output, but is much faster.
 		 *
 		 * Code below is functionally the same, but optimized to make better
 		 * use of the ATmega's hardware multiplier.
