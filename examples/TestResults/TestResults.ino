@@ -1,5 +1,21 @@
 #include <hsl2rgb.h>
 
+/*
+
+This example verifies that both the old and the new functions return the same values
+(give or take 1) over a wide range of inputs.
+The results for some specific input values are verified for the new function as well.
+
+If there is no numeric output, just a few lines of text, everything is working great.
+Any discrepencies between the old and new functions, or between the expected and actual
+results will be output.
+
+*/
+
+// Change allowable_difference to 0 to see how the results of the new algorithm differ
+// from the original.
+const uint8_t allowable_difference = 1;
+
 void setup() {
   Serial.begin(9600);
 
@@ -13,9 +29,15 @@ void setup() {
 
   Serial.println("Testing new implementation");
 
+  // Test a bunch of specific values
+
   test(9, 255, 255, 255, 255, 255); // white
   test(90, 255, 255, 255, 255, 255); // white
   test(600, 255, 255, 255, 255, 255); // white
+
+  test(9, 255, 0, 0, 0, 0); // black
+  test(90, 255, 0, 0, 0, 0); // black
+  test(600, 255, 0, 0, 0, 0); // black
 
   test(9, 255, 90, 90, 90, 90); // dark grey
   test(90, 255, 150, 150, 150, 150); // medium grey
@@ -90,15 +112,16 @@ void setup() {
       }
     }
   }
-  
+
   Serial.println("Done testing.");
 }
 
 void test(uint16_t hue, uint8_t sat, uint8_t lum, uint8_t r, uint8_t g, uint8_t b) {
   uint8_t rgb[3];
+
   hsl2rgb(hue, sat, lum, rgb);
 
-  check(hue, sat, lum, r, g, b, rgb);
+  check_close(hue, sat, lum, r, g, b, rgb);
 }
 
 void check(uint16_t hue, uint8_t sat, uint8_t lum, uint8_t r, uint8_t g, uint8_t b, uint8_t rgb[3]) {
@@ -108,12 +131,14 @@ void check(uint16_t hue, uint8_t sat, uint8_t lum, uint8_t r, uint8_t g, uint8_t
 }
 
 void check_close(uint16_t hue, uint8_t sat, uint8_t lum, uint8_t r, uint8_t g, uint8_t b, uint8_t rgb[3]) {
-  if (diff(rgb[0], r) > 1 || diff(rgb[1], g) > 1 || diff(rgb[2], b) > 1) {
+  if (diff(rgb[0], r) > allowable_difference
+    || diff(rgb[1], g) > allowable_difference
+    || diff(rgb[2], b) > allowable_difference) {
     print(hue, sat, lum, r, g, b, rgb);
   }
 }
 
-uint16_t diff(uint16_t a, uint16_t b) {
+uint8_t diff(uint8_t a, uint8_t b) {
   if (a > b) {
     return a - b;
   } 
@@ -147,4 +172,5 @@ void print(uint16_t hue, uint8_t sat, uint8_t lum, uint8_t r, uint8_t g, uint8_t
 void loop() {
   // do nothing
 }
+
 
