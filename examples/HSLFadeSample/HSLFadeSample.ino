@@ -33,7 +33,7 @@ void loop() {
   
   // Cycle once through the hues, from red, to green, to blue, back to red.
   for (int hue = 0; hue < 768; ++hue) {
-    hsl2rgb_orig(hue, 255, 255, rgb);
+    hsl2rgb(hue, 255, 255, rgb);
     writeLED(rgb);
     delay(10);
   }

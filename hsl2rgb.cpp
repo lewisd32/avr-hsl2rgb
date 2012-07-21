@@ -93,6 +93,15 @@ void hsl2rgb(uint16_t hue, uint8_t sat, uint8_t lum, uint8_t rgb[3]) {
 	}
 }
 
+void hsl2rgb(uint16_t hue, uint8_t sat, uint8_t lum, uint8_t rgb_fraction[3], uint8_t rgb[3]) {
+	hsl2rgb(hue, sat, lum, rgb);
+
+	for (int i = 0; i < 3; ++i) {
+		uint16_t t16 = rgb[i] * (rgb_fraction[i]+1);
+		rgb[i] = t16 / 256;
+	}
+}
+
 
 void hsl2rgb_orig(uint16_t hue, uint8_t sat, uint8_t lum, uint8_t rgb[3]) {
 	uint16_t r_temp, g_temp, b_temp;
