@@ -2,7 +2,7 @@ This library converts hue/saturation/luminance values to red/green/blue values, 
 
 Two different functions are included for this purpose.
 One (hsl2rgb_orig) is very slightly modified code from Johngineer's blog: http://www.johngineer.com/blog/?p=1022
-Variable names are changes, and the way saturation works has been inverted.
+Variable names are changed, but it it otherwise identical.
 The other (hsl2rgb) is an optimized version which produces *almost* identical output, but is 13x faster on an ATmega.
 
 See hsl2rgb.cpp for more information.

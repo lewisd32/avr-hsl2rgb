@@ -9,11 +9,6 @@
  *
  * == Functional Differences ==
  *
- * Both implementations here treat saturation the reverse of the implementation
- * from Johngineer's blog.  Convention in all the graphics tools I've used is
- * that 0 saturation is greyscale, and 255 saturation is bright saturated
- * colours, so that's how it's been implemented here.
- *
  * Some comprimises were made in the new version in order to be able to do an
  * efficient divide by 256, instead of the slower divide by 255, so the exact
  * numeric output is slightly different, but never off by more than one.
@@ -73,9 +68,9 @@ void hsl2rgb(uint16_t hue, uint8_t sat, uint8_t lum, uint8_t rgb[3]) {
 	for (int i = 0; i < 3; ++i) {
 		/*
 		 * Original:
-		 * rgb[i] = ((((rgb[i] * inverse_sat) / 255) + sat) * lum) / 255;
+		 * rgb[i] = ((((rgb[i] * sat) / 255) + inverse_sat) * lum) / 255;
 		 * Changed to:
-		 * rgb[i] = ((((rgb[i] * (inverse_sat+1)) / 256) + sat) * (lum+1)) / 256;
+		 * rgb[i] = ((((rgb[i] * (sat+1)) / 256) + inverse_sat) * (lum+1)) / 256;
 		 * Produces slightly different output, but is much faster.
 		 *
 		 * Code below is functionally the same, but optimized to make better
@@ -84,10 +79,10 @@ void hsl2rgb(uint16_t hue, uint8_t sat, uint8_t lum, uint8_t rgb[3]) {
 		 */
 		uint8_t t8 = rgb[i];
 
-		uint16_t t16 = t8 * inverse_sat;
-		t16 = t16 + t8; // Instead of * (inverse_sat+1)
+		uint16_t t16 = t8 * sat;
+		t16 = t16 + t8; // Instead of * (sat+1)
 		t8 = t16 / 256; // same performance as t16 >> 8
-		t8 = t8 + sat;
+		t8 = t8 + inverse_sat;
 
 		t16 = t8 * lum;
 		t16 = t16 + t8; // Instead of * (lum+1)
@@ -135,9 +130,9 @@ void hsl2rgb_orig(uint16_t hue, uint8_t sat, uint8_t lum, uint8_t rgb[3]) {
 		b_temp = 0;
 	}
 
-	r_temp = ((r_temp * inverse_sat) / 255) + sat;
-	g_temp = ((g_temp * inverse_sat) / 255) + sat;
-	b_temp = ((b_temp * inverse_sat) / 255) + sat;
+	r_temp = ((r_temp * sat) / 255) + inverse_sat;
+	g_temp = ((g_temp * sat) / 255) + inverse_sat;
+	b_temp = ((b_temp * sat) / 255) + inverse_sat;
 
 	r_temp = (r_temp * lum) / 255;
 	g_temp = (g_temp * lum) / 255;
