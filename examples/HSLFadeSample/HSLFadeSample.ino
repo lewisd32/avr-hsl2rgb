@@ -77,14 +77,14 @@ void blackOut() {
 void writeLED(uint8_t rgb[3]) {
     if (commonCathode) {
       // For common cathode LEDs, 0 is off and 255 is solid on.
-      analogWrite(9, rgb[0]);
-      analogWrite(10, rgb[1]);
-      analogWrite(11, rgb[2]);
+      analogWrite(RED_PIN, rgb[0]);
+      analogWrite(GREEN_PIN, rgb[1]);
+      analogWrite(BLUE_PIN, rgb[2]);
     } else {
       // For common anode, 0 is solid on, and 255 is off.
-      analogWrite(9, rgb[0] ^ -1);
-      analogWrite(10, rgb[1] ^ -1);
-      analogWrite(11, rgb[2] ^ -1);
+      analogWrite(RED_PIN, rgb[0] ^ -1);
+      analogWrite(GREEN_PIN, rgb[1] ^ -1);
+      analogWrite(BLUE_PIN, rgb[2] ^ -1);
     }
 }
 
